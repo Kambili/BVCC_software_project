@@ -1,4 +1,3 @@
-
 // ==========================================
 // 🏠 WEEK 1: Index.tsx - Homepage Component
 // ==========================================
@@ -6,19 +5,35 @@
 // and add interactive components starting in Week 2.
 
 // 📦 React imports - the core tools for building components
-import { useState } from 'react';
+import { useState } from "react";
 
 // 🎨 Icon imports - beautiful icons for your UI
-import { Upload, BarChart3, PieChart, TrendingUp, Database } from 'lucide-react';
+import {
+  Upload,
+  BarChart3,
+  PieChart,
+  TrendingUp,
+  Database,
+  Github,
+  Linkedin,
+  Twitter,
+  Heart,
+} from "lucide-react";
 
 // 🧩 UI Component imports - pre-built components for your interface
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 // 📊 Data-related imports - components that handle your data
-import DataUpload from '@/components/DataUpload';
-import Dashboard from '@/components/Dashboard';
-import { DataRow } from '@/types/data';
+import DataUpload from "@/components/DataUpload";
+import Dashboard from "@/components/Dashboard";
+import { DataRow } from "@/types/data";
 
 // 🔧 WEEK 2: Import your UploadProgressSimulator component here
 // 🔧 WEEK 3+: Additional imports will be added as you progress
@@ -26,20 +41,20 @@ import { DataRow } from '@/types/data';
 const Index = () => {
   // 🧠 Component State - this is your component's memory!
   // useState lets your component remember and change data
-  const [data, setData] = useState<DataRow[]>([]);      // Stores uploaded data
-  const [fileName, setFileName] = useState<string>(''); // Remembers file name
+  const [data, setData] = useState<DataRow[]>([]); // Stores uploaded data
+  const [fileName, setFileName] = useState<string>(""); // Remembers file name
 
   // 🔄 Event Handler - function that runs when data is uploaded
   const handleDataLoad = (loadedData: DataRow[], name: string) => {
     setData(loadedData);
     setFileName(name);
-    console.log('Data loaded:', loadedData.length, 'rows');
+    console.log("Data loaded:", loadedData.length, "rows");
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex flex-col">
       {/* 🎨 Hero Section - The top part of your homepage */}
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 flex-grow">
         <div className="text-center mb-12">
           {/* 🎯 Logo and Title */}
           <div className="flex items-center justify-center mb-6">
@@ -47,14 +62,16 @@ const Index = () => {
               <Database className="h-12 w-12 text-white" />
             </div>
           </div>
-          
+
           {/* 📝 WEEK 1: Students customize this title with their name */}
           <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-4">
-            Plug-N-Learn
+            Plug-N-Learn: Kambili's Dashboard
           </h1>
           <p className="text-xl text-slate-600 mb-2">Data Insight Engine</p>
           <p className="text-lg text-slate-500 max-w-2xl mx-auto">
-            Upload your dataset and instantly discover insights, visualize trends, and explore your data with interactive charts and analytics.
+            Upload your dataset and instantly discover insights, visualize
+            trends, and explore your data with interactive charts and analytics.
+            Built by Kambili - Top Software Engineer
           </p>
         </div>
 
@@ -77,7 +94,8 @@ const Index = () => {
                   </div>
                   <CardTitle className="text-xl">Easy Data Upload</CardTitle>
                   <CardDescription>
-                    Simply drag and drop your CSV files or click to browse. Support for various data formats.
+                    Simply drag and drop your CSV files or click to browse.
+                    Support for various data formats.
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -90,7 +108,8 @@ const Index = () => {
                   </div>
                   <CardTitle className="text-xl">Interactive Charts</CardTitle>
                   <CardDescription>
-                    Automatically generate bar charts, line graphs, pie charts, and more from your data.
+                    Automatically generate bar charts, line graphs, pie charts,
+                    and more from your data.
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -103,7 +122,8 @@ const Index = () => {
                   </div>
                   <CardTitle className="text-xl">Smart Insights</CardTitle>
                   <CardDescription>
-                    Discover patterns, trends, and statistical insights automatically generated from your dataset.
+                    Discover patterns, trends, and statistical insights
+                    automatically generated from your dataset.
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -124,13 +144,111 @@ const Index = () => {
           </>
         ) : (
           <>
-            <Dashboard data={data} fileName={fileName} onReset={() => {
-              setData([]);
-              setFileName('');
-            }} />
+            <Dashboard
+              data={data}
+              fileName={fileName}
+              onReset={() => {
+                setData([]);
+                setFileName("");
+              }}
+            />
           </>
         )}
       </div>
+
+      {/* 🦶 Footer Section - Sticks to the bottom of the page */}
+      <footer className="bg-white/80 backdrop-blur-sm border-t border-slate-200/50 mt-auto">
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
+            {/* 👤 Name and Copyright Section */}
+            <div className="flex flex-col sm:flex-row items-center gap-4">
+              <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-2 rounded-full">
+                <Database className="h-6 w-6 text-white" />
+              </div>
+              <div className="text-center sm:text-left">
+                <p className="font-semibold text-slate-700">
+                  Kambili's Dashboard
+                </p>
+                <p className="text-sm text-slate-500">
+                  © {new Date().getFullYear()} Kambili. All rights reserved.
+                </p>
+              </div>
+            </div>
+
+            {/* 🔧 Built with React Section */}
+            <div className="flex items-center gap-2 text-slate-600">
+              <span className="text-sm">Built with</span>
+              <Heart className="h-4 w-4 text-red-500 fill-current" />
+              <span className="text-sm font-medium bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                React
+              </span>
+            </div>
+
+            {/* 🔗 Social Media Links Section */}
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-slate-500 hidden sm:block">
+                Connect:
+              </span>
+              <div className="flex gap-3">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="p-2 h-auto hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                  asChild
+                >
+                  <a
+                    href="https://github.com/kambili"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="GitHub Profile"
+                  >
+                    <Github className="h-5 w-5" />
+                  </a>
+                </Button>
+
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="p-2 h-auto hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                  asChild
+                >
+                  <a
+                    href="https://linkedin.com/in/kambili"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="LinkedIn Profile"
+                  >
+                    <Linkedin className="h-5 w-5" />
+                  </a>
+                </Button>
+
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="p-2 h-auto hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                  asChild
+                >
+                  <a
+                    href="https://twitter.com/kambili"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Twitter Profile"
+                  >
+                    <Twitter className="h-5 w-5" />
+                  </a>
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* 📱 Mobile-friendly divider and additional info */}
+          <div className="border-t border-slate-200/50 mt-6 pt-6 text-center">
+            <p className="text-xs text-slate-400">
+              Data Insight Engine • Empowering decisions through visualization
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
