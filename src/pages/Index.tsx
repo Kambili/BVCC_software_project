@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> upstream/main
 // ==========================================
 // 🏠 WEEK 1: Index.tsx - Homepage Component
 // ==========================================
@@ -9,7 +5,6 @@
 // and add interactive components starting in Week 2.
 
 // 📦 React imports - the core tools for building components
-<<<<<<< HEAD
 import { useState } from "react";
 
 // 🎨 Icon imports - beautiful icons for your UI
@@ -19,10 +14,6 @@ import {
   PieChart,
   TrendingUp,
   Database,
-  Github,
-  Linkedin,
-  Twitter,
-  Heart,
 } from "lucide-react";
 
 // 🧩 UI Component imports - pre-built components for your interface
@@ -39,21 +30,6 @@ import {
 import DataUpload from "@/components/DataUpload";
 import Dashboard from "@/components/Dashboard";
 import { DataRow } from "@/types/data";
-=======
-import { useState } from 'react';
-
-// 🎨 Icon imports - beautiful icons for your UI
-import { Upload, BarChart3, PieChart, TrendingUp, Database } from 'lucide-react';
-
-// 🧩 UI Component imports - pre-built components for your interface
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-
-// 📊 Data-related imports - components that handle your data
-import DataUpload from '@/components/DataUpload';
-import Dashboard from '@/components/Dashboard';
-import { DataRow } from '@/types/data';
->>>>>>> upstream/main
 
 // 🔧 WEEK 2: Import your UploadProgressSimulator component here
 // 🔧 WEEK 3+: Additional imports will be added as you progress
@@ -61,35 +37,20 @@ import { DataRow } from '@/types/data';
 const Index = () => {
   // 🧠 Component State - this is your component's memory!
   // useState lets your component remember and change data
-<<<<<<< HEAD
   const [data, setData] = useState<DataRow[]>([]); // Stores uploaded data
   const [fileName, setFileName] = useState<string>(""); // Remembers file name
-=======
-  const [data, setData] = useState<DataRow[]>([]);      // Stores uploaded data
-  const [fileName, setFileName] = useState<string>(''); // Remembers file name
->>>>>>> upstream/main
 
   // 🔄 Event Handler - function that runs when data is uploaded
   const handleDataLoad = (loadedData: DataRow[], name: string) => {
     setData(loadedData);
     setFileName(name);
-<<<<<<< HEAD
     console.log("Data loaded:", loadedData.length, "rows");
-  };
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex flex-col">
-      {/* 🎨 Hero Section - The top part of your homepage */}
-      <div className="container mx-auto px-4 py-8 flex-grow">
-=======
-    console.log('Data loaded:', loadedData.length, 'rows');
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       {/* 🎨 Hero Section - The top part of your homepage */}
       <div className="container mx-auto px-4 py-8">
->>>>>>> upstream/main
         <div className="text-center mb-12">
           {/* 🎯 Logo and Title */}
           <div className="flex items-center justify-center mb-6">
@@ -97,7 +58,6 @@ const Index = () => {
               <Database className="h-12 w-12 text-white" />
             </div>
           </div>
-<<<<<<< HEAD
 
           {/* 📝 WEEK 1: Students customize this title with their name */}
           <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-4">
@@ -108,16 +68,6 @@ const Index = () => {
             Upload your dataset and instantly discover insights, visualize
             trends, and explore your data with interactive charts and analytics.
             Built by Kambili - Top Software Engineer
-=======
-          
-          {/* 📝 WEEK 1: Students customize this title with their name */}
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-4">
-            Plug-N-Learn
-          </h1>
-          <p className="text-xl text-slate-600 mb-2">Data Insight Engine</p>
-          <p className="text-lg text-slate-500 max-w-2xl mx-auto">
-            Upload your dataset and instantly discover insights, visualize trends, and explore your data with interactive charts and analytics.
->>>>>>> upstream/main
           </p>
         </div>
 
@@ -140,12 +90,8 @@ const Index = () => {
                   </div>
                   <CardTitle className="text-xl">Easy Data Upload</CardTitle>
                   <CardDescription>
-<<<<<<< HEAD
                     Simply drag and drop your CSV files or click to browse.
                     Support for various data formats.
-=======
-                    Simply drag and drop your CSV files or click to browse. Support for various data formats.
->>>>>>> upstream/main
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -158,12 +104,8 @@ const Index = () => {
                   </div>
                   <CardTitle className="text-xl">Interactive Charts</CardTitle>
                   <CardDescription>
-<<<<<<< HEAD
                     Automatically generate bar charts, line graphs, pie charts,
                     and more from your data.
-=======
-                    Automatically generate bar charts, line graphs, pie charts, and more from your data.
->>>>>>> upstream/main
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -176,12 +118,8 @@ const Index = () => {
                   </div>
                   <CardTitle className="text-xl">Smart Insights</CardTitle>
                   <CardDescription>
-<<<<<<< HEAD
                     Discover patterns, trends, and statistical insights
                     automatically generated from your dataset.
-=======
-                    Discover patterns, trends, and statistical insights automatically generated from your dataset.
->>>>>>> upstream/main
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -202,7 +140,6 @@ const Index = () => {
           </>
         ) : (
           <>
-<<<<<<< HEAD
             <Dashboard
               data={data}
               fileName={fileName}
@@ -308,15 +245,6 @@ const Index = () => {
           </div>
         </div>
       </footer>
-=======
-            <Dashboard data={data} fileName={fileName} onReset={() => {
-              setData([]);
-              setFileName('');
-            }} />
-          </>
-        )}
-      </div>
->>>>>>> upstream/main
     </div>
   );
 };
