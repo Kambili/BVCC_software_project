@@ -76,6 +76,10 @@ const Index = () => {
             trends, and explore your data with interactive charts and analytics.
             Built by Kambili - Top Software Engineer
           </p>
+          {/* 🆕 WEEK 3: Live Event Handling Demo (removed NameInput from homepage) */}
+          {/* <div className="mt-8 mb-8 flex justify-center">
+            <NameInput />
+          </div> */}
         </div>
 
         {/* 🔧 WEEK 2: ADD YOUR PROGRESS COMPONENT HERE! */}
