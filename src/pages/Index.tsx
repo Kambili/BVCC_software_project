@@ -11,9 +11,15 @@ import { useState } from "react";
 import {
   Upload,
   BarChart3,
-  PieChart,
   TrendingUp,
   Database,
+  Heart,
+  Github,
+  Linkedin,
+  Twitter,
+  FileText,
+  Brain,
+  Zap,
 } from "lucide-react";
 
 // 🧩 UI Component imports - pre-built components for your interface
@@ -30,6 +36,7 @@ import {
 import DataUpload from "@/components/DataUpload";
 import Dashboard from "@/components/Dashboard";
 import { DataRow } from "@/types/data";
+import UploadProgressSimulator from "@/components/UploadProgressSimulator";
 
 // 🔧 WEEK 2: Import your UploadProgressSimulator component here
 // 🔧 WEEK 3+: Additional imports will be added as you progress
@@ -95,7 +102,20 @@ const Index = () => {
                   </CardDescription>
                 </CardHeader>
               </Card>
-
+              <Card className="bg-white/50 backdrop-blur-sm border-purple-200">
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Upload className="mr-3 h-6 w-6 text-purple-600" />
+                    Interactive Progress Demo
+                  </CardTitle>
+                  <CardDescription>
+                    Try our upload progress simulator built with React state!
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <UploadProgressSimulator />
+                </CardContent>
+              </Card>
               {/* 📊 Charts Feature Card */}
               <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/70 backdrop-blur-sm">
                 <CardHeader className="text-center">
@@ -152,7 +172,7 @@ const Index = () => {
         )}
       </div>
 
-      {/* 🦶 Footer Section - Sticks to the bottom of the page */}
+      {/* Footer Section */}
       <footer className="bg-white/80 backdrop-blur-sm border-t border-slate-200/50 mt-auto">
         <div className="container mx-auto px-4 py-8">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
@@ -238,7 +258,7 @@ const Index = () => {
           </div>
 
           {/* 📱 Mobile-friendly divider and additional info */}
-          <div className="border-t border-slate-200/50 mt-6 pt-6 text-center">
+          <div className="border-t border-slate-200/50 mt-2 pt-2 text-center">
             <p className="text-xs text-slate-400">
               Data Insight Engine • Empowering decisions through visualization
             </p>
