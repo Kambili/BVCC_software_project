@@ -37,6 +37,17 @@ import DataUpload from "@/components/DataUpload";
 import Dashboard from "@/components/Dashboard";
 import { DataRow } from "@/types/data";
 import UploadProgressSimulator from "@/components/UploadProgressSimulator";
+import NameInput from "C:UsersHPDesktop\bvccsrccomponentsNameInput.tsx";
+
+const root = ReactDOM.createRoot(
+  document.getElementById("root") as HTMLElement
+);
+
+root.render(
+  <React.StrictMode>
+    <NameInput />
+  </React.StrictMode>
+);
 
 // 🔧 WEEK 2: Import your UploadProgressSimulator component here
 // 🔧 WEEK 3+: Additional imports will be added as you progress
