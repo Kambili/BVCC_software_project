@@ -37,17 +37,7 @@ import DataUpload from "@/components/DataUpload";
 import Dashboard from "@/components/Dashboard";
 import { DataRow } from "@/types/data";
 import UploadProgressSimulator from "@/components/UploadProgressSimulator";
-import NameInput from "C:UsersHPDesktop\bvccsrccomponentsNameInput.tsx";
-
-const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
-);
-
-root.render(
-  <React.StrictMode>
-    <NameInput />
-  </React.StrictMode>
-);
+import NameInput from "@/components/NameInput";
 
 // 🔧 WEEK 2: Import your UploadProgressSimulator component here
 // 🔧 WEEK 3+: Additional imports will be added as you progress
@@ -88,17 +78,21 @@ const Index = () => {
             Built by Kambili - Top Software Engineer
           </p>
           {/* 🆕 WEEK 3: Live Event Handling Demo (removed NameInput from homepage) */}
-          {/* <div className="mt-8 mb-8 flex justify-center">
-            <NameInput />
-          </div> */}
+          {
+            <div className="mt-8 mb-8 flex justify-center">
+              <NameInput />
+            </div>
+          }
         </div>
 
         {/* 🔧 WEEK 2: ADD YOUR PROGRESS COMPONENT HERE! */}
         {/* This is where students will add their UploadProgressSimulator component */}
         {/* Example: */}
-        {/* <div className="mb-8">
-          <UploadProgressSimulator />
-        </div> */}
+        {
+          <div className="mb-8">
+            <UploadProgressSimulator />
+          </div>
+        }
 
         {data.length === 0 ? (
           <>
@@ -159,19 +153,6 @@ const Index = () => {
                 </CardHeader>
               </Card>
             </div>
-
-            {/* 📤 Upload Section - Where users upload their data */}
-            <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm max-w-2xl mx-auto">
-              <CardHeader className="text-center">
-                <CardTitle className="text-2xl">Get Started</CardTitle>
-                <CardDescription>
-                  Upload your CSV file to begin exploring your data
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <DataUpload onDataLoad={handleDataLoad} />
-              </CardContent>
-            </Card>
           </>
         ) : (
           <>

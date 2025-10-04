@@ -160,7 +160,7 @@ export default function NameInput() {
           <div className="flex gap-3 pt-2">
             <button
               onClick={handleSubmit}
-              disabled={nameError || emailError || name.length < 2}
+              disabled={!!nameError || !!emailError || name.length < 2}
               className="flex-1 bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition font-medium"
             >
               Submit
