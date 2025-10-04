@@ -80,7 +80,9 @@ const Index = () => {
           {/* 🆕 WEEK 3: Live Event Handling Demo (removed NameInput from homepage) */}
           {
             <div className="mt-8 mb-8 flex justify-center">
-              <NameInput />
+              <div className="w-full max-w-4xl">
+                <NameInput />
+              </div>
             </div>
           }
         </div>
@@ -110,20 +112,6 @@ const Index = () => {
                     Support for various data formats.
                   </CardDescription>
                 </CardHeader>
-              </Card>
-              <Card className="bg-white/50 backdrop-blur-sm border-purple-200">
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Upload className="mr-3 h-6 w-6 text-purple-600" />
-                    Interactive Progress Demo
-                  </CardTitle>
-                  <CardDescription>
-                    Try our upload progress simulator built with React state!
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <UploadProgressSimulator />
-                </CardContent>
               </Card>
               {/* 📊 Charts Feature Card */}
               <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/70 backdrop-blur-sm">

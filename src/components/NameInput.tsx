@@ -83,7 +83,7 @@ export default function NameInput() {
   const colors = ["Red", "Blue", "Green", "Yellow", "Purple", "Orange", "Pink"];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+    <div className="flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
         <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
           Welcome Form
@@ -180,14 +180,6 @@ export default function NameInput() {
             <p className="text-green-800 text-center font-medium">{greeting}</p>
           </div>
         )}
-
-        {/* localStorage Note */}
-        <div className="mt-6 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-          <p className="text-xs text-blue-800">
-            <strong>Note:</strong> To use localStorage in your own environment,
-            uncomment the localStorage line in the code (line 59).
-          </p>
-        </div>
       </div>
     </div>
   );
