@@ -37,6 +37,7 @@ import DataUpload from "@/components/DataUpload";
 import Dashboard from "@/components/Dashboard";
 import { DataRow } from "@/types/data";
 import UploadProgressSimulator from "@/components/UploadProgressSimulator";
+import NameInput from "@/components/NameInput";
 
 // 🔧 WEEK 2: Import your UploadProgressSimulator component here
 // 🔧 WEEK 3+: Additional imports will be added as you progress
@@ -77,17 +78,23 @@ const Index = () => {
             Built by Kambili - Top Software Engineer
           </p>
           {/* 🆕 WEEK 3: Live Event Handling Demo (removed NameInput from homepage) */}
-          {/* <div className="mt-8 mb-8 flex justify-center">
-            <NameInput />
-          </div> */}
+          {
+            <div className="mt-8 mb-8 flex justify-center">
+              <div className="w-full max-w-4xl">
+                <NameInput />
+              </div>
+            </div>
+          }
         </div>
 
         {/* 🔧 WEEK 2: ADD YOUR PROGRESS COMPONENT HERE! */}
         {/* This is where students will add their UploadProgressSimulator component */}
         {/* Example: */}
-        {/* <div className="mb-8">
-          <UploadProgressSimulator />
-        </div> */}
+        {
+          <div className="mb-8">
+            <UploadProgressSimulator />
+          </div>
+        }
 
         {data.length === 0 ? (
           <>
@@ -105,20 +112,6 @@ const Index = () => {
                     Support for various data formats.
                   </CardDescription>
                 </CardHeader>
-              </Card>
-              <Card className="bg-white/50 backdrop-blur-sm border-purple-200">
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Upload className="mr-3 h-6 w-6 text-purple-600" />
-                    Interactive Progress Demo
-                  </CardTitle>
-                  <CardDescription>
-                    Try our upload progress simulator built with React state!
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <UploadProgressSimulator />
-                </CardContent>
               </Card>
               {/* 📊 Charts Feature Card */}
               <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/70 backdrop-blur-sm">
@@ -148,19 +141,6 @@ const Index = () => {
                 </CardHeader>
               </Card>
             </div>
-
-            {/* 📤 Upload Section - Where users upload their data */}
-            <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm max-w-2xl mx-auto">
-              <CardHeader className="text-center">
-                <CardTitle className="text-2xl">Get Started</CardTitle>
-                <CardDescription>
-                  Upload your CSV file to begin exploring your data
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <DataUpload onDataLoad={handleDataLoad} />
-              </CardContent>
-            </Card>
           </>
         ) : (
           <>
