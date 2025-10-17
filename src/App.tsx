@@ -24,38 +24,6 @@ const queryClient = new QueryClient();
 // 🚀 Main App Component - This wraps your entire application
 function App() {
   return (
-<<<<<<< HEAD
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        {/* These Toaster components handle popup notifications */}
-        <Toaster />
-        <Sonner />
-
-        {/* 🧭 Router setup - manages which page to show */}
-        <BrowserRouter>
-          <Routes>
-            {/* 🏠 Main route - shows your homepage */}
-            <Route path="/" element={<Index />} />
-
-            {/* 🎓 Instructor demo route - for live useState demonstrations */}
-            <Route path="/demo-counter" element={<DemoCounter />} />
-
-            {/* 🎮 Live session playground - interactive React examples */}
-            <Route path="/live-session" element={<LiveSession />} />
-
-            {/* 🎯 Week 3 live playground - interactive components & user input */}
-            <Route path="/week3-live" element={<Week3Live />} />
-
-            {/* �🔧 WEEK 2+: Add new routes here as you build more pages */}
-            {/* Example: <Route path="/dashboard" element={<Dashboard />} /> */}
-
-            {/* ⚠️ Catch-all route - shows 404 for unknown URLs */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
-=======
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       {/* These Toaster components handle popup notifications */}
