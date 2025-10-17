@@ -38,7 +38,7 @@ import Dashboard from "@/components/Dashboard";
 import { DataRow } from "@/types/data";
 import UploadProgressSimulator from "@/components/UploadProgressSimulator";
 import NameInput from "@/components/NameInput";
-
+import DataAnalyzer from "@/components/DataAnalyzer";
 // 🔧 WEEK 2: Import your UploadProgressSimulator component here
 // 🔧 WEEK 3+: Additional imports will be added as you progress
 
@@ -95,66 +95,72 @@ const Index = () => {
             <UploadProgressSimulator />
           </div>
         }
-
-        {data.length === 0 ? (
-          <>
-            {/* 🎨 Features Grid - Shows what your app can do */}
-            <div className="grid md:grid-cols-3 gap-6 mb-12">
-              {/* 📤 Upload Feature Card */}
-              <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/70 backdrop-blur-sm">
-                <CardHeader className="text-center">
-                  <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Upload className="h-8 w-8 text-blue-600" />
-                  </div>
-                  <CardTitle className="text-xl">Easy Data Upload</CardTitle>
-                  <CardDescription>
-                    Simply drag and drop your CSV files or click to browse.
-                    Support for various data formats.
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-              {/* 📊 Charts Feature Card */}
-              <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/70 backdrop-blur-sm">
-                <CardHeader className="text-center">
-                  <div className="bg-indigo-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <BarChart3 className="h-8 w-8 text-indigo-600" />
-                  </div>
-                  <CardTitle className="text-xl">Interactive Charts</CardTitle>
-                  <CardDescription>
-                    Automatically generate bar charts, line graphs, pie charts,
-                    and more from your data.
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-
-              {/* 🧠 Insights Feature Card */}
-              <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/70 backdrop-blur-sm">
-                <CardHeader className="text-center">
-                  <div className="bg-teal-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <TrendingUp className="h-8 w-8 text-teal-600" />
-                  </div>
-                  <CardTitle className="text-xl">Smart Insights</CardTitle>
-                  <CardDescription>
-                    Discover patterns, trends, and statistical insights
-                    automatically generated from your dataset.
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            </div>
-          </>
-        ) : (
-          <>
-            <Dashboard
-              data={data}
-              fileName={fileName}
-              onReset={() => {
-                setData([]);
-                setFileName("");
-              }}
-            />
-          </>
-        )}
+        {/* 🆕 WEEK 4: Live Event Handling Demo (removed NameInput from homepage) */}
+        {
+          <div className="mb-8">
+            <DataAnalyzer />
+          </div>
+        }
       </div>
+
+      {data.length === 0 ? (
+        <>
+          {/* 🎨 Features Grid - Shows what your app can do */}
+          <div className="grid md:grid-cols-3 gap-6 mb-12">
+            {/* 📤 Upload Feature Card */}
+            <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/70 backdrop-blur-sm">
+              <CardHeader className="text-center">
+                <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Upload className="h-8 w-8 text-blue-600" />
+                </div>
+                <CardTitle className="text-xl">Easy Data Upload</CardTitle>
+                <CardDescription>
+                  Simply drag and drop your CSV files or click to browse.
+                  Support for various data formats.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+            {/* 📊 Charts Feature Card */}
+            <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/70 backdrop-blur-sm">
+              <CardHeader className="text-center">
+                <div className="bg-indigo-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <BarChart3 className="h-8 w-8 text-indigo-600" />
+                </div>
+                <CardTitle className="text-xl">Interactive Charts</CardTitle>
+                <CardDescription>
+                  Automatically generate bar charts, line graphs, pie charts,
+                  and more from your data.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            {/* 🧠 Insights Feature Card */}
+            <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/70 backdrop-blur-sm">
+              <CardHeader className="text-center">
+                <div className="bg-teal-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <TrendingUp className="h-8 w-8 text-teal-600" />
+                </div>
+                <CardTitle className="text-xl">Smart Insights</CardTitle>
+                <CardDescription>
+                  Discover patterns, trends, and statistical insights
+                  automatically generated from your dataset.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          </div>
+        </>
+      ) : (
+        <>
+          <Dashboard
+            data={data}
+            fileName={fileName}
+            onReset={() => {
+              setData([]);
+              setFileName("");
+            }}
+          />
+        </>
+      )}
 
       {/* Footer Section */}
       <footer className="bg-white/80 backdrop-blur-sm border-t border-slate-200/50 mt-auto">
