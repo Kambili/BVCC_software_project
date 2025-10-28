@@ -38,6 +38,7 @@ import Dashboard from "@/components/Dashboard";
 import { DataRow } from "@/types/data";
 import UploadProgressSimulator from "@/components/UploadProgressSimulator";
 import NameInput from "@/components/NameInput";
+import SimpleChart from "@/components/simplechart";
 
 // 🔧 WEEK 2: Import your UploadProgressSimulator component here
 // 🔧 WEEK 3+: Additional imports will be added as you progress
@@ -93,6 +94,12 @@ const Index = () => {
         {
           <div className="mb-8">
             <UploadProgressSimulator />
+          </div>
+        }
+
+        {
+          <div className="mb-8">
+            <SimpleChart />
           </div>
         }
 
