@@ -89,27 +89,6 @@ const Index = () => {
           }
         </div>
 
-        {/* 🔧 WEEK 2: ADD YOUR PROGRESS COMPONENT HERE! */}
-        {/* This is where students will add their UploadProgressSimulator component */}
-        {/* Example: */}
-        {
-          <div className="mb-8">
-            <UploadProgressSimulator />
-          </div>
-        }
-
-        {
-          <div className="mb-8">
-            <SimpleChart />
-          </div>
-        }
-
-        {
-          <div className="mb-8">
-            <DashboardPage />
-          </div>
-        }
-
         {data.length === 0 ? (
           <>
             {/* 🎨 Features Grid - Shows what your app can do */}
@@ -156,19 +135,46 @@ const Index = () => {
               </Card>
             </div>
           </>
-        ) : (
-          <>
-            <Dashboard
-              data={data}
-              fileName={fileName}
-              onReset={() => {
-                setData([]);
-                setFileName("");
-              }}
-            />
-          </>
-        )}
+        ) : null}
       </div>
+
+      {/* 🔧 WEEK 2: ADD YOUR PROGRESS COMPONENT HERE! */}
+      {/* This is where students will add their UploadProgressSimulator component */}
+      {/* Example: */}
+      {!data.length ? (
+        <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm max-w-2xl mx-auto">
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl">Get Started</CardTitle>
+            <CardDescription>
+              Upload your CSV file to begin exploring your data
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <DataUpload onDataLoad={handleDataLoad} />
+          </CardContent>
+        </Card>
+      ) : (
+        <Dashboard
+          data={data}
+          fileName={fileName}
+          onReset={() => {
+            setData([]);
+            setFileName("");
+          }}
+        />
+      )}
+
+      {
+        //<div className="mb-8">
+        //<SimpleChart />
+        //</div>
+      }
+
+      {
+        //<div className="mb-8">
+        //<DashboardPage />
+        //</div>
+      }
 
       {/* Footer Section */}
       <footer className="bg-white/80 backdrop-blur-sm border-t border-slate-200/50 mt-auto">

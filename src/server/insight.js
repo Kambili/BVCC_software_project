@@ -1,7 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
-import { generateObject } from "ai";
+import { generateObject, generateText } from "ai";
 import { z } from "zod";
 import { openai } from "@ai-sdk/openai";
 
@@ -26,6 +26,31 @@ app.post("/insight", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "AI call failed" });
+  }
+});
+
+// NEW endpoint for chat
+app.post("/chat", async (req, res) => {
+  try {
+    const { prompt, dataContext } = req.body;
+
+    const systemPrompt = `You are a data analysis assistant. Answer questions about the user's dataset.
+    
+Dataset Context:
+${dataContext}
+
+Provide clear, helpful answers with emojis and formatting.`;
+
+    const { text } = await generateText({
+      model: openai("gpt-4o-mini"),
+      system: systemPrompt,
+      prompt: prompt,
+    });
+
+    res.json({ response: text });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Chat AI call failed" });
   }
 });
 
