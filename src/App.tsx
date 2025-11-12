@@ -3,6 +3,7 @@
 // ==========================================
 // This is the root component of your React application!
 // Think of this as the foundation of your house - everything starts here.
+// Add this import at the top
 
 // 📦 Import statements - bringing in the tools we need
 import { Toaster } from "@/components/ui/toaster"; // For showing notifications
@@ -20,6 +21,7 @@ import Week5Live from "./components/Demos/Week5Live";
 import Week6Live from "./components/Demos/Week6Live";
 import BrokenDemo from "./pages/BrokenDemo";
 import BrokenDemoSolution from "./pages/BrokenDemoSolution";
+import DashboardPage from "./pages/DashboardPage";
 
 // Create a client for managing data queries (don't worry about this yet!)
 const queryClient = new QueryClient();
@@ -39,21 +41,16 @@ function App() {
             {/* 🏠 Main route - shows your homepage */}
             <Route path="/" element={<Index />} />
 
-<<<<<<< HEAD
-            {/* 🎓 Instructor demo route - for live useState demonstrations */}
-            <Route path="/demo-counter" element={<DemoCounter />} />
+            <Route path="/week6-live" element={<Week6Live />} />
 
-            {/* 🎮 Live session playground - interactive React examples */}
-            <Route path="/live-session" element={<LiveSession />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
 
-            {/* 🎯 Week 3 live playground - interactive components & user input */}
-            <Route path="/week3-live" element={<Week3Live />} />
-
-            {/* �🔧 WEEK 4+ */}
-            <Route path="/week4-live" element={<Week4LiveDemo />} />
-
-            {/* Week 5 live playground - interactive components & user input */}
-            <Route path="/week5-live" element={<Week5Live />} />
+            {/* 🔍 Week 9: Quality Detective Challenge */}
+            <Route path="/broken-demo" element={<BrokenDemo />} />
+            <Route
+              path="/broken-demo-solution"
+              element={<BrokenDemoSolution />}
+            />
 
             {/* ⚠️ Catch-all route - shows 404 for unknown URLs */}
             <Route path="*" element={<NotFound />} />
@@ -61,20 +58,6 @@ function App() {
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
-=======
-          <Route path="/week6-live" element={<Week6Live />} />
-          
-          {/* 🔍 Week 9: Quality Detective Challenge */}
-          <Route path="/broken-demo" element={<BrokenDemo />} />
-          <Route path="/broken-demo-solution" element={<BrokenDemoSolution />} />
-          
-          {/* ⚠️ Catch-all route - shows 404 for unknown URLs */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
->>>>>>> upstream/main
   );
 }
 
