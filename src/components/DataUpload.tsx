@@ -1,23 +1,30 @@
-
 // ==========================================
-// 📤 WEEK 3: DataUpload.tsx - File Upload Component
+// 📤 WEEK 3: DataUpload.tsx - File Upload Component (Theme-Integrated)
 // ==========================================
-// This component handles CSV file uploads and will be enhanced throughout the course
-// 🔧 WEEK 3: Students will add form validation and user input handling
-// 🔧 WEEK 4: Students will enhance data processing capabilities  
-// 🔧 WEEK 5: Students will add advanced file handling and validation
-// 🔧 WEEK 6: Students will connect this to chart generation
-// 🔧 WEEK 7: Students will integrate with external APIs
+// This component handles CSV file uploads and supports parent-controlled theming
 
-import { useState, useCallback } from 'react';
-import { Upload, FileText, AlertCircle, CheckCircle, X, FileSpreadsheet } from 'lucide-react';
+import { useState, useCallback } from "react";
+import {
+  Upload,
+  FileText,
+  AlertCircle,
+  CheckCircle,
+  X,
+  FileSpreadsheet,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Progress } from "@/components/ui/progress";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { DataRow } from '@/types/data';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { DataRow } from "@/types/data";
 
-// 📋 Props interface - defines what data this component expects
+// 📋 Props interface
 interface DataUploadProps {
   onDataLoad: (data: DataRow[], fileName: string) => void;
 }
@@ -32,100 +39,84 @@ interface UploadStats {
 }
 
 const DataUpload = ({ onDataLoad }: DataUploadProps) => {
-  // 🧠 Component state - manages upload process and UI feedback
+  // 🧠 Component state
   const [isDragging, setIsDragging] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [stats, setStats] = useState<UploadStats | null>(null);
-  
-  // 🔧 WEEK 3: Add form validation state here
-  // Example: const [validationErrors, setValidationErrors] = useState([]);
-  
-  // 🔧 WEEK 4: Add data processing state here
-  // Example: const [processingStatus, setProcessingStatus] = useState('idle');
-  
-  // 🔧 WEEK 5: Add advanced file handling state here
-  // Example: const [fileMetadata, setFileMetadata] = useState(null);
 
   const formatFileSize = (bytes: number): string => {
-    if (bytes === 0) return '0 Bytes';
+    if (bytes === 0) return "0 Bytes";
     const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const sizes = ["Bytes", "KB", "MB", "GB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   };
 
   const validateFile = (file: File): string | null => {
-    // Check file type
-    if (!file.name.toLowerCase().endsWith('.csv')) {
-      return 'Please upload a CSV file (.csv extension required)';
+    if (!file.name.toLowerCase().endsWith(".csv")) {
+      return "Please upload a CSV file (.csv extension required)";
     }
-
-    // Check file size (10MB limit)
     if (file.size > 10 * 1024 * 1024) {
-      return 'File size too large. Please upload files smaller than 10MB';
+      return "File size too large. Please upload files smaller than 10MB";
     }
-
-    // Check if file is empty
     if (file.size === 0) {
-      return 'File appears to be empty. Please upload a valid CSV file';
+      return "File appears to be empty. Please upload a valid CSV file";
     }
-
     return null;
   };
 
   const parseCSV = (text: string): DataRow[] => {
-    const lines = text.trim().split('\n');
+    const lines = text.trim().split("\n");
     if (lines.length < 2) {
-      throw new Error('CSV must have at least a header row and one data row');
+      throw new Error("CSV must have at least a header row and one data row");
     }
 
-    // Parse CSV with better handling of quoted values and commas
     const parseCSVLine = (line: string): string[] => {
       const result = [];
-      let current = '';
+      let current = "";
       let inQuotes = false;
-      
+
       for (let i = 0; i < line.length; i++) {
         const char = line[i];
         const nextChar = line[i + 1];
-        
+
         if (char === '"') {
           if (inQuotes && nextChar === '"') {
-            // Escaped quote
             current += '"';
-            i++; // Skip next quote
+            i++;
           } else {
-            // Toggle quote state
             inQuotes = !inQuotes;
           }
-        } else if (char === ',' && !inQuotes) {
-          // End of field
+        } else if (char === "," && !inQuotes) {
           result.push(current.trim());
-          current = '';
+          current = "";
         } else {
           current += char;
         }
       }
-      
+
       result.push(current.trim());
       return result;
     };
 
-    const headers = parseCSVLine(lines[0]).map(h => h.replace(/^"|"$/g, ''));
+    const headers = parseCSVLine(lines[0]).map((h) => h.replace(/^"|"$/g, ""));
     const data: DataRow[] = [];
     let validRows = 0;
 
     for (let i = 1; i < lines.length; i++) {
       const line = lines[i].trim();
-      if (!line) continue; // Skip empty lines
-      
+      if (!line) continue;
+
       const values = parseCSVLine(line);
-      
-      // Skip rows that don't match header count (unless they're completely empty)
+
       if (values.length !== headers.length) {
-        console.warn(`Row ${i + 1} has ${values.length} columns, expected ${headers.length}. Skipping.`);
+        console.warn(
+          `Row ${i + 1} has ${values.length} columns, expected ${
+            headers.length
+          }. Skipping.`
+        );
         continue;
       }
 
@@ -133,25 +124,29 @@ const DataUpload = ({ onDataLoad }: DataUploadProps) => {
       let hasData = false;
 
       headers.forEach((header, index) => {
-        let value: string | number | boolean | null = values[index]?.replace(/^"|"$/g, '') || '';
-        
-        // Skip completely empty rows
-        if (value !== '') hasData = true;
-        
-        // Try to parse as number
-        if (value !== '' && !isNaN(Number(value)) && value !== 'true' && value !== 'false') {
+        let value: string | number | boolean | null =
+          values[index]?.replace(/^"|"$/g, "") || "";
+
+        if (value !== "") hasData = true;
+
+        if (
+          value !== "" &&
+          !isNaN(Number(value)) &&
+          value !== "true" &&
+          value !== "false"
+        ) {
           const numValue = Number(value);
           if (Number.isFinite(numValue)) {
             value = numValue;
           }
-        } else if (value.toLowerCase() === 'true') {
+        } else if (value.toLowerCase() === "true") {
           value = true;
-        } else if (value.toLowerCase() === 'false') {
+        } else if (value.toLowerCase() === "false") {
           value = false;
-        } else if (value === '') {
+        } else if (value === "") {
           value = null;
         }
-        
+
         row[header] = value;
       });
 
@@ -162,17 +157,18 @@ const DataUpload = ({ onDataLoad }: DataUploadProps) => {
     }
 
     if (data.length === 0) {
-      throw new Error('No valid data rows found in CSV file');
+      throw new Error("No valid data rows found in CSV file");
     }
 
-    console.log(`Parsed ${validRows} valid rows from ${lines.length - 1} total rows`);
+    console.log(
+      `Parsed ${validRows} valid rows from ${lines.length - 1} total rows`
+    );
     return data;
   };
 
   const handleFile = async (file: File) => {
     const startTime = Date.now();
-    
-    // Validate file
+
     const validationError = validateFile(file);
     if (validationError) {
       setError(validationError);
@@ -184,14 +180,13 @@ const DataUpload = ({ onDataLoad }: DataUploadProps) => {
     setUploadProgress(0);
 
     try {
-      // Simulate progressive loading for better UX
       const progressInterval = setInterval(() => {
-        setUploadProgress(prev => Math.min(prev + 10, 90));
+        setUploadProgress((prev) => Math.min(prev + 10, 90));
       }, 100);
 
       const text = await file.text();
       const data = parseCSV(text);
-      
+
       clearInterval(progressInterval);
       setUploadProgress(100);
 
@@ -201,22 +196,21 @@ const DataUpload = ({ onDataLoad }: DataUploadProps) => {
         fileSize: formatFileSize(file.size),
         rowCount: data.length,
         columnCount: Object.keys(data[0] || {}).length,
-        processingTime
+        processingTime,
       };
 
       setStats(uploadStats);
-      
-      // Small delay to show completion
+
       setTimeout(() => {
-        console.log('Upload successful:', uploadStats);
+        console.log("Upload successful:", uploadStats);
         onDataLoad(data, file.name);
       }, 500);
-
     } catch (err) {
       setUploadProgress(0);
-      const errorMessage = err instanceof Error ? err.message : 'Failed to parse CSV file';
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to parse CSV file";
       setError(`Processing failed: ${errorMessage}`);
-      console.error('CSV parsing error:', err);
+      console.error("CSV parsing error:", err);
     } finally {
       setTimeout(() => setIsLoading(false), 500);
     }
@@ -225,13 +219,13 @@ const DataUpload = ({ onDataLoad }: DataUploadProps) => {
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
-    
+
     const files = Array.from(e.dataTransfer.files);
     if (files.length > 1) {
-      setError('Please upload only one file at a time');
+      setError("Please upload only one file at a time");
       return;
     }
-    
+
     if (files.length > 0) {
       handleFile(files[0]);
     }
@@ -242,8 +236,7 @@ const DataUpload = ({ onDataLoad }: DataUploadProps) => {
     if (files && files.length > 0) {
       handleFile(files[0]);
     }
-    // Reset input to allow same file selection
-    e.target.value = '';
+    e.target.value = "";
   };
 
   const clearError = () => setError(null);
@@ -263,40 +256,43 @@ const DataUpload = ({ onDataLoad }: DataUploadProps) => {
       )}
 
       {stats && !error && (
-        <Alert>
-          <CheckCircle className="h-4 w-4 text-green-600" />
+        <Alert className="dark:bg-green-900/20 dark:border-green-700">
+          <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
           <AlertDescription>
             <div className="space-y-1">
-              <p className="font-medium text-green-800">Upload successful!</p>
-              <p className="text-sm text-green-700">
-                Processed <strong>{stats.rowCount.toLocaleString()}</strong> rows and{' '}
-                <strong>{stats.columnCount}</strong> columns from{' '}
-                <strong>{stats.fileName}</strong> ({stats.fileSize}) in {stats.processingTime}ms
+              <p className="font-medium text-green-800 dark:text-green-200">
+                Upload successful!
+              </p>
+              <p className="text-sm text-green-700 dark:text-green-300">
+                Processed <strong>{stats.rowCount.toLocaleString()}</strong>{" "}
+                rows and <strong>{stats.columnCount}</strong> columns from{" "}
+                <strong>{stats.fileName}</strong> ({stats.fileSize}) in{" "}
+                {stats.processingTime}ms
               </p>
             </div>
           </AlertDescription>
         </Alert>
       )}
 
-      <Card>
+      <Card className="dark:bg-gray-800/70 dark:border-gray-700">
         <CardHeader className="text-center">
-          <CardTitle className="flex items-center justify-center gap-2">
+          <CardTitle className="flex items-center justify-center gap-2 dark:text-white">
             <FileSpreadsheet className="h-6 w-6" />
             Upload Your Data
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="dark:text-gray-400">
             Drop your CSV file here or click to browse. Maximum file size: 10MB
           </CardDescription>
         </CardHeader>
-        
+
         <CardContent>
           <div
             className={`border-2 border-dashed rounded-lg p-8 text-center transition-all duration-200 ${
               isDragging
-                ? 'border-primary bg-primary/5'
+                ? "border-primary bg-primary/5 dark:border-blue-400 dark:bg-blue-500/10"
                 : isLoading
-                ? 'border-muted bg-muted/20'
-                : 'border-muted-foreground/25 hover:border-muted-foreground/50'
+                ? "border-muted bg-muted/20 dark:border-gray-600 dark:bg-gray-700/20"
+                : "border-muted-foreground/25 hover:border-muted-foreground/50 dark:border-gray-600 dark:hover:border-gray-500"
             }`}
             onDrop={handleDrop}
             onDragOver={(e) => e.preventDefault()}
@@ -304,31 +300,42 @@ const DataUpload = ({ onDataLoad }: DataUploadProps) => {
             onDragLeave={() => setIsDragging(false)}
           >
             <div className="flex flex-col items-center space-y-4">
-              <div className={`p-4 rounded-full ${
-                isLoading ? 'bg-primary/10' : 'bg-primary/10'
-              }`}>
+              <div className="p-4 rounded-full bg-primary/10 dark:bg-blue-500/20">
                 {isLoading ? (
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary dark:border-blue-400"></div>
                 ) : (
-                  <Upload className={`h-8 w-8 ${isDragging ? 'text-primary' : 'text-primary/70'}`} />
+                  <Upload
+                    className={`h-8 w-8 ${
+                      isDragging
+                        ? "text-primary dark:text-blue-400"
+                        : "text-primary/70 dark:text-blue-300"
+                    }`}
+                  />
                 )}
               </div>
-              
+
               <div>
-                <p className="text-lg font-medium">
-                  {isLoading ? 'Processing your file...' : 
-                   isDragging ? 'Drop your CSV file here' : 'Drop your CSV file here'}
+                <p className="text-lg font-medium dark:text-white">
+                  {isLoading
+                    ? "Processing your file..."
+                    : isDragging
+                    ? "Drop your CSV file here"
+                    : "Drop your CSV file here"}
                 </p>
-                <p className="text-sm text-muted-foreground mt-1">
-                  {isLoading ? 'Please wait while we analyze your data' : 'or click to browse your files'}
+                <p className="text-sm mt-1 text-muted-foreground dark:text-gray-400">
+                  {isLoading
+                    ? "Please wait while we analyze your data"
+                    : "or click to browse your files"}
                 </p>
               </div>
 
               {isLoading && (
                 <div className="w-full max-w-xs space-y-2">
                   <Progress value={uploadProgress} className="h-2" />
-                  <p className="text-xs text-muted-foreground">
-                    {uploadProgress < 90 ? 'Reading file...' : 'Analyzing data...'}
+                  <p className="text-xs text-muted-foreground dark:text-gray-400">
+                    {uploadProgress < 90
+                      ? "Reading file..."
+                      : "Analyzing data..."}
                   </p>
                 </div>
               )}
@@ -337,8 +344,8 @@ const DataUpload = ({ onDataLoad }: DataUploadProps) => {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => document.getElementById('file-input')?.click()}
-                  className="flex items-center space-x-2"
+                  onClick={() => document.getElementById("file-input")?.click()}
+                  className="flex items-center space-x-2 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white dark:border-gray-600"
                 >
                   <FileText className="h-4 w-4" />
                   <span>Choose File</span>
@@ -357,16 +364,27 @@ const DataUpload = ({ onDataLoad }: DataUploadProps) => {
           </div>
 
           <div className="mt-6 space-y-4">
-            <div className="text-xs text-muted-foreground text-center space-y-1">
-              <p><strong>Supported format:</strong> CSV files with headers in the first row</p>
-              <p><strong>File requirements:</strong> UTF-8 encoding, comma-separated values</p>
-              <p><strong>Data types:</strong> Numbers, text, booleans (true/false) automatically detected</p>
+            <div className="text-xs text-center space-y-1 text-muted-foreground dark:text-gray-400">
+              <p>
+                <strong>Supported format:</strong> CSV files with headers in the
+                first row
+              </p>
+              <p>
+                <strong>File requirements:</strong> UTF-8 encoding,
+                comma-separated values
+              </p>
+              <p>
+                <strong>Data types:</strong> Numbers, text, booleans
+                (true/false) automatically detected
+              </p>
             </div>
-            
-            <div className="bg-muted/50 rounded-lg p-4">
-              <h4 className="text-sm font-medium mb-2">Sample CSV Format:</h4>
-              <pre className="text-xs text-muted-foreground font-mono">
-{`Name,Age,Score,Active
+
+            <div className="rounded-lg p-4 bg-muted/50 dark:bg-gray-700/50">
+              <h4 className="text-sm font-medium mb-2 dark:text-white">
+                Sample CSV Format:
+              </h4>
+              <pre className="text-xs font-mono text-muted-foreground dark:text-gray-300">
+                {`Name,Age,Score,Active
 John Doe,25,85.5,true
 Jane Smith,30,92.0,false
 Bob Johnson,28,78.5,true`}

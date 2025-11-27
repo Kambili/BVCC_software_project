@@ -1,13 +1,12 @@
 import { useState } from "react";
+import { useTheme } from "@/contexts/ThemeContext";
 
-export default function NameInput() {
+export default function NameInput({ onComplete }) {
+  const { theme, setTheme } = useTheme();
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [color, setColor] = useState("");
+  const [chartPalette, setChartPalette] = useState("");
   const [nameError, setNameError] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-  const [greeting, setGreeting] = useState("");
+  const [userType, setUserType] = useState("");
 
   // Real-time name validation
   const validateName = (value) => {
@@ -19,80 +18,67 @@ export default function NameInput() {
     return value.length >= 2;
   };
 
-  // Real-time email validation
-  const validateEmail = (value) => {
-    if (value.length === 0) {
-      setEmailError("");
-      return true; // Email is optional
-    }
-    if (!value.includes("@") || !value.includes(".")) {
-      setEmailError("Email must contain @ and .");
-      return false;
-    }
-    setEmailError("");
-    return true;
-  };
-
   const handleNameChange = (e) => {
     const value = e.target.value;
     setName(value);
     validateName(value);
-    setSubmitted(false);
-  };
-
-  const handleEmailChange = (e) => {
-    const value = e.target.value;
-    setEmail(value);
-    validateEmail(value);
-    setSubmitted(false);
   };
 
   const handleSubmit = () => {
     const isNameValid = validateName(name);
-    const isEmailValid = validateEmail(email);
 
-    if (isNameValid && isEmailValid) {
+    if (isNameValid) {
       let message = `Hello, ${name}! 👋`;
-      if (color) {
-        message += ` Nice choice with ${color}!`;
+      if (chartPalette) {
+        const selected = chartPalettes.find((p) => p.value === chartPalette);
+        message += ` Love the ${selected.name} palette!`;
       }
-      setGreeting(message);
-      setSubmitted(true);
 
       // In your own environment, you would save to localStorage like this:
-      localStorage.setItem("lastEnteredName", name);
+      localStorage.setItem("userName", name);
+      localStorage.setItem("userTheme", theme);
+      localStorage.setItem("chartPalette", chartPalette);
+      localStorage.setItem("userType", userType);
+
+      // Navigate to Index page after successful submission
+      if (onComplete) {
+        onComplete();
+      }
     }
   };
 
   const handleClear = () => {
     setName("");
-    setEmail("");
-    setColor("");
+    setChartPalette("");
     setNameError("");
-    setEmailError("");
-    setGreeting("");
-    setSubmitted(false);
+    setUserType("");
   };
 
   const handleKeyPress = (e) => {
-    if (e.key === "Enter" && !nameError && !emailError && name.length >= 2) {
+    if (e.key === "Enter" && !nameError && name.length >= 2) {
       handleSubmit();
     }
   };
 
-  const colors = ["Red", "Blue", "Green", "Yellow", "Purple", "Orange", "Pink"];
-
+  const chartPalettes = [
+    { name: "Cool Blues", value: "blues", emoji: "🔵" },
+    { name: "Fresh Greens", value: "greens", emoji: "🟢" },
+    { name: "Royal Purples", value: "purples", emoji: "🟣" },
+    { name: "Warm Oranges", value: "oranges", emoji: "🟠" },
+    { name: "Colorful Mix", value: "colorful", emoji: "🌈" },
+    { name: "Professional Grays", value: "grays", emoji: "⚫" },
+  ];
   return (
     <div className="flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 w-full max-w-md">
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-6 text-center">
           Welcome Form
         </h1>
 
         <div className="space-y-5">
           {/* Name Input */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Name *
             </label>
             <input
@@ -100,70 +86,97 @@ export default function NameInput() {
               value={name}
               onChange={handleNameChange}
               onKeyPress={handleKeyPress}
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:outline-none transition ${
+              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:outline-none transition bg-white dark:bg-gray-700 text-gray-900 dark:text-white ${
                 nameError
-                  ? "border-red-500 focus:ring-red-200"
-                  : "border-gray-300 focus:ring-indigo-200"
+                  ? "border-red-500 focus:ring-red-200 dark:border-red-400 dark:focus:ring-red-800"
+                  : "border-gray-300 dark:border-gray-600 focus:ring-indigo-200 dark:focus:ring-indigo-800"
               }`}
               placeholder="Enter your name"
             />
             <div className="flex justify-between items-center mt-1">
-              {nameError && <p className="text-red-500 text-sm">{nameError}</p>}
-              <p className="text-gray-500 text-xs ml-auto">
+              {nameError && <p className="text-red-500 dark:text-red-400 text-sm">{nameError}</p>}
+              <p className="text-gray-500 dark:text-gray-400 text-xs ml-auto">
                 {name.length} character{name.length !== 1 ? "s" : ""}
               </p>
             </div>
           </div>
 
-          {/* Email Input */}
+          {/* User Type */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Email (optional)
-            </label>
-            <input
-              type="text"
-              value={email}
-              onChange={handleEmailChange}
-              onKeyPress={handleKeyPress}
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:outline-none transition ${
-                emailError
-                  ? "border-red-500 focus:ring-red-200"
-                  : "border-gray-300 focus:ring-indigo-200"
-              }`}
-              placeholder="Enter your email"
-            />
-            {emailError && (
-              <p className="text-red-500 text-sm mt-1">{emailError}</p>
-            )}
-          </div>
-
-          {/* Color Dropdown */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Favorite Color (optional)
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              How would you describe yourself? (optional)
             </label>
             <select
-              value={color}
-              onChange={(e) => setColor(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:outline-none transition"
+              value={userType}
+              onChange={(e) => setUserType(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-800 focus:outline-none transition bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
             >
-              <option value="">Select a color</option>
-              {colors.map((c) => (
-                <option key={c} value={c}>
-                  {c}
+              <option value="">Select one</option>
+              <option value="student">Student / Learning</option>
+              <option value="professional">Professional / Business</option>
+              <option value="researcher">Researcher / Academic</option>
+              <option value="exploring">Just Exploring</option>
+            </select>
+          </div>
+
+          {/* Chart Color Palette */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Chart Color Palette (optional)
+            </label>
+            <select
+              value={chartPalette}
+              onChange={(e) => setChartPalette(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-800 focus:outline-none transition bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            >
+              <option value="">Select a palette</option>
+              {chartPalettes.map((palette) => (
+                <option key={palette.value} value={palette.value}>
+                  {palette.emoji} {palette.name}
                 </option>
               ))}
             </select>
+          </div>
+
+          {/* Theme Preference */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Theme Preference
+            </label>
+            <div className="flex gap-4">
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  name="theme"
+                  value="light"
+                  checked={theme === "light"}
+                  onChange={() => setTheme("light")}
+                  className="mr-2"
+                />
+                <span className="text-gray-700 dark:text-gray-300">☀️ Light Mode</span>
+              </label>
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  name="theme"
+                  value="dark"
+                  checked={theme === "dark"}
+                  onChange={() => setTheme("dark")}
+                  className="mr-2"
+                />
+                <span className="text-gray-700 dark:text-gray-300">🌙 Dark Mode</span>
+              </label>
+            </div>
           </div>
 
           {/* Buttons */}
           <div className="flex gap-3 pt-2">
             <button
               onClick={handleSubmit}
-              disabled={!!nameError || !!emailError || name.length < 2}
+              disabled={!!nameError || name.length < 2}
               className="flex-1 bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition font-medium"
             >
-              Submit
+              Get Started
             </button>
             <button
               onClick={handleClear}
@@ -173,13 +186,6 @@ export default function NameInput() {
             </button>
           </div>
         </div>
-
-        {/* Greeting Message */}
-        {submitted && greeting && (
-          <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-            <p className="text-green-800 text-center font-medium">{greeting}</p>
-          </div>
-        )}
       </div>
     </div>
   );
