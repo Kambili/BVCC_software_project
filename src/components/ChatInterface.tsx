@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Send, MessageCircle, Bot, User } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Send, MessageCircle, Bot, User, Trash2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -21,10 +21,40 @@ interface ChatMessage {
   timestamp: Date;
 }
 
+const CHAT_STORAGE_KEY = "ai-chat-history";
+
 const ChatInterface = ({ data }: ChatInterfaceProps) => {
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  // Load messages from localStorage on mount
+  const [messages, setMessages] = useState<ChatMessage[]>(() => {
+    const saved = localStorage.getItem(CHAT_STORAGE_KEY);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        // Convert timestamp strings back to Date objects
+        return parsed.map((msg: ChatMessage) => ({
+          ...msg,
+          timestamp: new Date(msg.timestamp),
+        }));
+      } catch (e) {
+        console.error("Failed to parse saved chat history:", e);
+        return [];
+      }
+    }
+    return [];
+  });
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  // Save messages to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(messages));
+  }, [messages]);
+
+  // Clear chat history
+  const clearChatHistory = () => {
+    setMessages([]);
+    localStorage.removeItem(CHAT_STORAGE_KEY);
+  };
 
   // Smart AI response generation based on data context
   const generateAIResponse = async (
@@ -42,8 +72,7 @@ Sample Data: ${JSON.stringify(dataContext.slice(0, 3), null, 2)}
 `;
 
     try {
-      const response = await fetch("http://localhost:4000/chat", {
-        // Changed to /chat
+      const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -110,14 +139,30 @@ Sample Data: ${JSON.stringify(dataContext.slice(0, 3), null, 2)}
   return (
     <Card className="h-[600px] flex flex-col">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <MessageCircle className="h-5 w-5" />
-          Data Analysis Assistant
-        </CardTitle>
-        <p className="text-sm text-muted-foreground">
-          Ask questions about your data, request insights, or get help
-          understanding patterns
-        </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle className="flex items-center gap-2">
+              <MessageCircle className="h-5 w-5" />
+              Data Analysis Assistant
+            </CardTitle>
+            <p className="text-sm text-muted-foreground mt-1">
+              Ask questions about your data, request insights, or get help
+              understanding patterns
+            </p>
+          </div>
+          {messages.length > 0 && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={clearChatHistory}
+              className="flex items-center gap-2"
+              title="Clear chat history"
+            >
+              <Trash2 className="h-4 w-4" />
+              Clear
+            </Button>
+          )}
+        </div>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col">
         <div className="flex-1 overflow-y-auto space-y-4 mb-4 min-h-0">

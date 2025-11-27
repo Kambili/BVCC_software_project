@@ -5,15 +5,30 @@
 
 ## 🚀 Quick Start
 
+### Local Development
+
 ```bash
 # 1. Install dependencies
 npm install
 
-# 2. Start the development server
+# 2. Copy environment file
+cp .env.example .env
+# Then add your OpenAI API key to .env
+
+# 3. Start development (starts both AI server and frontend)
 npm run dev
 
-# 3. Open in browser
-# Go to http://localhost:5173
+# 4. Open in browser
+# Go to http://localhost:8080
+```
+
+**Alternative:** Run servers separately
+```bash
+# Terminal 1 - AI Server (port 4000)
+npm run dev:server
+
+# Terminal 2 - Frontend (port 8080)
+npm run dev:client
 ```
 
 ## 🎯 Getting Started
@@ -281,13 +296,27 @@ This course is designed as a complete 10-week experience where you'll build a pr
 
 ## 🚀 Free Deployment Options
 
-### Option 1: Vercel (Recommended)
+### Option 1: Vercel (Recommended for this project)
 ```bash
-# 1. Push your code to GitHub
-# 2. Visit vercel.com and sign up with GitHub
-# 3. Import your repository
-# 4. Deploy with one click
+# 1. Install Vercel CLI
+npm i -g vercel
+
+# 2. Deploy
+vercel
+
+# 3. Add environment variables in Vercel dashboard:
+#    - Go to Settings → Environment Variables
+#    - Add OPENAI_API_KEY with your actual API key
+#    - Select Production, Preview, and Development environments
+
+# 4. Redeploy
+vercel --prod
 ```
+
+**Why Vercel for this project?**
+- Serverless functions in `/api` folder automatically work
+- No need to configure separate backend hosting
+- Single deployment handles both frontend and AI endpoints
 
 ### Option 2: Netlify
 ```bash
