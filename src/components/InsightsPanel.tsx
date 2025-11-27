@@ -1,9 +1,14 @@
-import { TrendingUp, AlertTriangle, BarChart3, Info } from "lucide-react";
+import { TrendingUp, AlertTriangle, BarChart3, Info, Star } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { DataInsight, DataRow } from "@/types/data";
 import { Button } from "./ui/button";
 import { useState } from "react";
+import {
+  addSavedInsight,
+  removeSavedInsight,
+  isSavedInsight,
+} from "@/utils/storage";
 
 // 📊 Week 4-5: Smart Data Insights - Bringing Your Data to Life
 // Students - Transform raw data into meaningful stories! This component showcases professional data presentation patterns.
@@ -20,18 +25,60 @@ interface InsightsPanelProps {
   data: DataRow[];
   insights: DataInsight[];
   showAll?: boolean;
+  fileName?: string;
+  onInsightSaved?: () => void;
 }
 
 const InsightsPanel = ({
   data,
   insights,
   showAll = false,
+  fileName,
+  onInsightSaved,
 }: InsightsPanelProps) => {
+  console.log("📄 InsightsPanel received fileName:", fileName); // ← ADD THIS
+  console.log("📄 Type of fileName:", typeof fileName); // ← AND THIS
   const [isLoading, setIsLoading] = useState(false);
   const [aiInsight, setAiInsight] = useState<{
     summary: string;
     anomalies: string[];
   }>();
+
+  const [savedStates, setSavedStates] = useState<Record<string, boolean>>({});
+  // Generate unique ID for each insight
+  const generateInsightId = (insight: DataInsight, index: number) => {
+    return `insight-${insight.title
+      .replace(/\s+/g, "-")
+      .toLowerCase()}-${index}`;
+  };
+
+  // Toggle bookmark for an insight
+  const toggleBookmark = (insight: DataInsight, index: number) => {
+    const insightId = generateInsightId(insight, index);
+    const isSaved = isSavedInsight(insightId);
+
+    if (isSaved) {
+      removeSavedInsight(insightId);
+      setSavedStates((prev) => ({ ...prev, [insightId]: false }));
+    } else {
+      addSavedInsight({
+        id: insightId,
+        title: insight.title,
+        description: insight.description,
+        confidence: insight.confidence || "N/A",
+        fileName: fileName,
+        savedAt: new Date().toISOString(),
+      });
+      setSavedStates((prev) => ({ ...prev, [insightId]: true }));
+    }
+    window.dispatchEvent(new Event("insightsUpdated"));
+  };
+
+  // Check if insight is bookmarked
+  const isBookmarked = (insight: DataInsight, index: number) => {
+    const insightId = generateInsightId(insight, index);
+    return savedStates[insightId] ?? isSavedInsight(insightId);
+  };
   // 🟢 EASY - Week 3: Icon Mapping Function
   // TODO: Students - Understand switch statements and icon libraries
   //
@@ -129,12 +176,12 @@ const InsightsPanel = ({
   // nothing, it shows "No emails yet" with instructions on how to get started
   if (insights.length === 0) {
     return (
-      <Card>
+      <Card className="dark:bg-gray-800 dark:border-gray-700">
         <CardHeader>
-          <CardTitle>Insights</CardTitle>
+          <CardTitle className="dark:text-white">Insights</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-gray-500 text-center py-8">
+          <p className="text-center py-8 text-gray-500 dark:text-gray-400">
             No insights available. Upload data to see automated analysis.
           </p>
           {/* TODO: Week 3 - Add loading skeleton when processing data */}
@@ -145,9 +192,9 @@ const InsightsPanel = ({
   }
 
   return (
-    <Card>
+    <Card className="dark:bg-gray-800 dark:border-gray-700">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+        <CardTitle className="flex items-center gap-2 dark:text-white">
           <TrendingUp className="h-5 w-5" />
           Data Insights
           {/* TODO: Week 4 - Add insight count badge */}
@@ -155,13 +202,12 @@ const InsightsPanel = ({
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <Button onClick={handleGenerateInsight} disabled={isLoading}>
-          {isLoading ? "Generating..." : "Generate AI Insight"}
-        </Button>
         {aiInsight && (
-          <div className="my-4 border rounded-lg p-4 hover:bg-gray-50 transition-colors">
-            <h4 className="font-medium text-gray-900 mb-1">AI Insight</h4>
-            <p className="text-sm text-gray-600 mb-2 text-balance">
+          <div className="my-4 border rounded-lg p-4 transition-colors hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-700">
+            <h4 className="font-medium mb-1 text-gray-900 dark:text-white">
+              AI Insight
+            </h4>
+            <p className="text-sm mb-2 text-balance text-gray-600 dark:text-gray-300">
               {aiInsight.summary}
             </p>
             <ul className="list-disc list-inside text-sm text-gray-600 mb-2 text-balance">
@@ -191,7 +237,7 @@ const InsightsPanel = ({
           {insights.map((insight, index) => (
             <div
               key={index}
-              className="border rounded-lg p-4 hover:bg-gray-50 transition-colors"
+              className="border rounded-lg p-4 transition-colors hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-700"
             >
               {/* TODO: Week 4 - Add click handler to expand insight details */}
               <div className="flex items-start justify-between gap-3">
@@ -206,10 +252,10 @@ const InsightsPanel = ({
                     {getInsightIcon(insight.type)}
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-medium text-gray-900 mb-1">
+                    <h4 className="font-medium mb-1 text-gray-900 dark:text-white">
                       {insight.title}
                     </h4>
-                    <p className="text-sm text-gray-600 mb-2">
+                    <p className="text-sm mb-2 text-gray-600 dark:text-gray-300">
                       {insight.description}
                     </p>
 
@@ -228,36 +274,39 @@ const InsightsPanel = ({
                     
                     Try this: What happens if you remove the conditional check?
                     */}
-                    {insight.value && (
-                      <Badge variant="secondary" className="text-xs">
-                        {insight.value}
-                      </Badge>
-                    )}
+                    <div className="flex items-center gap-2">
+                      {/* 🟡 MEDIUM - Week 4: Confidence Score Display */}
+                      {insight.confidence && (
+                        <Badge variant="outline" className="text-xs">
+                          {insight.confidence} confidence
+                        </Badge>
+                      )}
+
+                      {/* ⭐ NEW: Bookmark Button */}
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => toggleBookmark(insight, index)}
+                        className="h-8 w-8 p-0"
+                        title={
+                          isBookmarked(insight, index)
+                            ? "Remove bookmark"
+                            : "Save insight"
+                        }
+                      >
+                        <Star
+                          className={`h-4 w-4 transition-all ${
+                            isBookmarked(insight, index)
+                              ? "fill-yellow-400 text-yellow-400"
+                              : "text-gray-400 hover:text-yellow-400"
+                          }`}
+                        />
+                      </Button>
+                    </div>
 
                     {/* TODO: Week 5 - Add action buttons (explore, dismiss, share) */}
                   </div>
                 </div>
-
-                {/* 🟡 MEDIUM - Week 4: Confidence Score Display */}
-                {/* TODO: Students - How do confidence scores help users trust insights? */}
-                {/* 
-                What's happening here:
-                - AI-generated insights have confidence scores (0-1)
-                - We convert to percentage (0.85 becomes 85%)
-                - We round to avoid showing decimals like 84.7%
-                
-                Why show confidence scores?
-                - Helps users understand how reliable the insight is
-                - Builds trust in AI-generated content
-                - Lets users prioritize which insights to act on
-                
-                Real-world example: Weather apps show confidence in forecasts
-                */}
-                {insight.confidence && (
-                  <Badge variant="outline" className="text-xs">
-                    {insight.confidence} confidence
-                  </Badge>
-                )}
               </div>
 
               {/* TODO: Week 5 - Add expandable details section */}

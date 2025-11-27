@@ -31,6 +31,7 @@ import ChartSection from "./ChartSection";
 import InsightsPanel from "./InsightsPanel";
 import ChatInterface from "./ChatInterface";
 import { generateDataInsights, getDataSummary } from "@/utils/dataAnalysis";
+import InsightsTab from "./InsightsTab";
 
 // 🔧 WEEK 6: Import custom chart components here
 // Example: import CustomChartBuilder from './CustomChartBuilder';
@@ -47,7 +48,11 @@ interface DashboardProps {
   onReset: () => void;
 }
 
-const Dashboard = ({ data, fileName, onReset }: DashboardProps) => {
+const Dashboard = ({
+  data,
+  fileName,
+  onReset,
+}: DashboardProps) => {
   // 🧠 Dashboard state management
   const [activeTab, setActiveTab] = useState("overview");
 
@@ -71,7 +76,21 @@ const Dashboard = ({ data, fileName, onReset }: DashboardProps) => {
 
   // 📊 Computed values - these recalculate when data changes
   const summary = useMemo(() => getDataSummary(data), [data]);
-  const insights = useMemo(() => generateDataInsights(data), [data]);
+  const [insights, setInsights] = useState<any[]>([]);
+  const [insightsGenerated, setInsightsGenerated] = useState(false);
+  const [isGeneratingInsights, setIsGeneratingInsights] = useState(false);
+
+  const handleGenerateInsights = () => {
+    setIsGeneratingInsights(true);
+
+    // Simulate processing time for better UX
+    setTimeout(() => {
+      const generatedInsights = generateDataInsights(data);
+      setInsights(generatedInsights);
+      setInsightsGenerated(true);
+      setIsGeneratingInsights(false);
+    }, 1500); // 1.5 second delay
+  };
 
   // Enhanced export functionality
   const handleExportCSV = () => {
@@ -161,14 +180,15 @@ ${Object.entries(summary.columnTypes)
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-4 sm:p-6 pb-20 max-w-full overflow-x-hidden dark:bg-gray-900">
       {/* Enhanced Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-3xl font-bold text-gray-900">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
             Data Analysis Dashboard
           </h2>
-          <div className="flex items-center gap-4 text-sm text-gray-600 mt-1">
+          <div className="flex items-center gap-4 text-sm mt-1 text-gray-600 dark:text-gray-300">
+            {" "}
             <span className="flex items-center gap-1">
               <FileText className="h-4 w-4" />
               <span className="font-semibold">{fileName}</span>
@@ -178,7 +198,7 @@ ${Object.entries(summary.columnTypes)
             <span>{summary.numericColumns} numeric</span>
           </div>
         </div>
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex gap-2 flex-wrap sm:flex-nowrap">
           <Button
             variant="outline"
             onClick={handleExportCSV}
@@ -205,63 +225,62 @@ ${Object.entries(summary.columnTypes)
           </Button>
         </div>
       </div>
-
       {/* Enhanced Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
+        <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200 dark:from-blue-900/20 dark:to-blue-800/20 dark:border-blue-700">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-blue-600">
+            <CardTitle className="text-sm font-medium text-blue-600 dark:text-blue-400">
               Total Records
             </CardTitle>
-            <BarChart3 className="h-4 w-4 text-blue-800" />
+            <BarChart3 className="h-4 w-4 text-blue-800 dark:text-blue-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-blue-900">
+            <div className="text-2xl font-bold text-blue-900 dark:text-blue-300">
               {summary.totalRows.toLocaleString()}
             </div>
-            <p className="text-xs text-blue-600 mt-1">rows of data</p>
+            <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">rows of data</p>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200">
+        <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200 dark:from-green-900/20 dark:to-green-800/20 dark:border-green-700">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-green-800">
+            <CardTitle className="text-sm font-medium text-green-800 dark:text-green-400">
               Data Columns
             </CardTitle>
-            <Table className="h-4 w-4 text-green-600" />
+            <Table className="h-4 w-4 text-green-600 dark:text-green-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-900">
+            <div className="text-2xl font-bold text-green-900 dark:text-green-300">
               {summary.totalColumns}
             </div>
-            <p className="text-xs text-green-600 mt-1">total fields</p>
+            <p className="text-xs text-green-600 dark:text-green-400 mt-1">total fields</p>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
+        <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200 dark:from-purple-900/20 dark:to-purple-800/20 dark:border-purple-700">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-purple-800">
+            <CardTitle className="text-sm font-medium text-purple-800 dark:text-purple-400">
               Numeric Fields
             </CardTitle>
-            <LineChart className="h-4 w-4 text-purple-600" />
+            <LineChart className="h-4 w-4 text-purple-600 dark:text-purple-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-purple-900">
+            <div className="text-2xl font-bold text-purple-900 dark:text-purple-300">
               {summary.numericColumns}
             </div>
-            <p className="text-xs text-purple-600 mt-1">for analysis</p>
+            <p className="text-xs text-purple-600 dark:text-purple-400 mt-1">for analysis</p>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200">
+        <Card className="bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200 dark:from-orange-900/20 dark:to-orange-800/20 dark:border-orange-700">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-orange-800">
+            <CardTitle className="text-sm font-medium text-orange-800 dark:text-orange-400">
               Data Quality
             </CardTitle>
-            <PieChart className="h-4 w-4 text-orange-600" />
+            <PieChart className="h-4 w-4 text-orange-600 dark:text-orange-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-orange-900">
+            <div className="text-2xl font-bold text-orange-900 dark:text-orange-300">
               {Object.values(summary.missingValues).every(
                 (count) => count === 0
               )
@@ -276,11 +295,10 @@ ${Object.entries(summary.columnTypes)
                       100
                   ).toFixed(1)}%`}
             </div>
-            <p className="text-xs text-orange-600 mt-1">complete data</p>
+            <p className="text-xs text-orange-600 dark:text-orange-400 mt-1">complete data</p>
           </CardContent>
         </Card>
       </div>
-
       {/* Main Content Tabs */}
       <Tabs
         value={activeTab}
@@ -316,7 +334,51 @@ ${Object.entries(summary.columnTypes)
               <ChartSection data={data} />
             </div>
             <div className="xl:col-span-1">
-              <InsightsPanel data={data} insights={insights.slice(0, 6)} />
+              {!insightsGenerated && !isGeneratingInsights ? (
+                <Card className="dark:bg-gray-800 dark:border-gray-700">
+                  <CardHeader>
+                    <CardTitle className="dark:text-white">
+                      Insights
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-center py-12">
+                    <p className="mb-4 text-gray-500 dark:text-gray-400">
+                      Click below to generate AI-powered insights from your data
+                    </p>
+                    <Button onClick={handleGenerateInsights}>
+                      Generate Insights
+                    </Button>
+                  </CardContent>
+                </Card>
+              ) : isGeneratingInsights ? (
+                <Card className="dark:bg-gray-800 dark:border-gray-700">
+                  <CardHeader>
+                    <CardTitle className="dark:text-white">
+                      Generating Insights...
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-center py-12">
+                    <div className="flex flex-col items-center gap-4">
+                      <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 dark:border-blue-400"></div>
+                      <p className="text-lg text-gray-600 dark:text-gray-300">
+                        Analyzing your data...
+                      </p>
+                      <p className="text-sm text-gray-400 dark:text-gray-500">
+                        This may take a moment
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ) : (
+                <InsightsPanel
+                  data={data}
+                  insights={insights.slice(0, 6)}
+                  fileName={fileName}
+                  onInsightSaved={() => {
+                    window.dispatchEvent(new Event("insightsUpdated"));
+                  }}
+                />
+              )}
             </div>
           </div>
         </TabsContent>
@@ -326,7 +388,49 @@ ${Object.entries(summary.columnTypes)
         </TabsContent>
 
         <TabsContent value="insights">
-          <InsightsPanel data={data} insights={insights} showAll />
+          {!insightsGenerated && !isGeneratingInsights ? (
+            <Card className="dark:bg-gray-800 dark:border-gray-700">
+              <CardHeader>
+                <CardTitle className="dark:text-white">
+                  Insights
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="text-center py-8">
+                <p className="text-gray-500 dark:text-gray-400 mb-4">
+                  No insights generated yet. Click below to analyze your data.
+                </p>
+                <Button onClick={handleGenerateInsights} size="lg">
+                  Generate Insights
+                </Button>
+              </CardContent>
+            </Card>
+          ) : isGeneratingInsights ? (
+            <Card className="dark:bg-gray-800 dark:border-gray-700">
+              <CardHeader>
+                <CardTitle className="dark:text-white">
+                  Generating Insights...
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="text-center py-8">
+                <div className="flex flex-col items-center gap-4">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-blue-400"></div>
+                  <p className="text-gray-600 dark:text-gray-300">
+                    Analyzing your data...
+                  </p>
+                  <p className="text-sm text-gray-400 dark:text-gray-500">
+                    Processing {data.length.toLocaleString()} rows across{" "}
+                    {Object.keys(data[0] || {}).length} columns
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          ) : (
+            <InsightsTab
+              data={data}
+              insights={insights}
+              fileName={fileName}
+            />
+          )}
         </TabsContent>
 
         <TabsContent value="chat">
